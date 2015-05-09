@@ -28,10 +28,11 @@ run do
   sleep(2)
 
   new_page_title = @driver.title
+  expected_page_title = 'Casino, Odds, Livesport och Pokerturneringar - hos Betway hittar du allt'
 
-  RSpec.describe "new page title" do
+  RSpec.describe 'new page title' do
     it 'is equal to another string of the same value' do
-      expect(new_page_title).to eq('Casino, Odds, Livesport och Pokerturneringar - hos Betway hittar du allt')
+      expect(new_page_title).to eq(expected_page_title)
     end
   end
 end
