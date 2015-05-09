@@ -1,23 +1,48 @@
+#filename: basic-example.rb
+
 require 'selenium-webdriver'
+require 'rspec'
 
-driver = Selenium::WebDriver.for :firefox
-driver.navigate.to 'http://betway.com'
+def setup
+  @driver = Selenium::WebDriver.for :firefox
+end
 
-sleep(10)
+def teardown
+  @driver.quit
+end
 
-element = driver.find_element(:id, 'VaultAccountNumber')
-element.send_keys 'Hello WebDriver!'
+def run
+  setup
+  yield
+  teardown
+end
 
-password_field = driver.find_element(:id, 'LoginPassword')
-password_field.send_keys 'password'
+def wait
+  Selenium::WebDriver::Wait.new(timeout: 10)
+end
 
-sleep(5)
+def fill_login_form
+  element = @driver.find_element(:id, 'VaultAccountNumber')
+  element.send_keys 'Hello WebDriver!'
+  password_field = @driver.find_element(:id, 'LoginPassword')
+  password_field.send_keys 'password'
+  wait
+  submit_button = @driver.find_element(:id, 'Venge_Submit')
+  submit_button.click
 
-submit_button = driver.find_element(:id, 'Venge_Submit')
-submit_button.click
+  wait
+  title = @driver.title
+  expected_title = 'Play Online Casino Games, Bet on Live Sports and Join Poker Tournaments - only at Betway'
 
-sleep(5)
+  RSpec.describe 'Main page title' do
+    it 'is equal to another string of the same value' do
+      expect(title).to eq(expected_title)
+    end
+  end
+end
 
-puts driver.title
-
-driver.quit
+run do
+  @driver.get 'http://betway.com'
+  wait
+  fill_login_form
+end

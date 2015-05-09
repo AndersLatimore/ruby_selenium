@@ -1,4 +1,4 @@
-# filename: dropdown.rb
+# filename: click_test.rb
 
 require 'selenium-webdriver'
 require 'rspec'
